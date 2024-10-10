@@ -1,0 +1,12 @@
+info:
+  app:
+    version: "@project.version@"
+    build-number: "@build-number@"
+
+leanix:
+  token: TOKEN
+  auth-provider-host: TOKEN_PROVIDER_HOST
+  api-url: API_URL
+
+cron:
+  job1: "*/10 * * * * * "

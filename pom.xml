@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.cargarantie.leanix</groupId>
+    <artifactId>vica-score-calculator</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <!-- Car Garantie SCM -->
+    <!--
+    <scm>
+      <connection>
+        scm:git:ssh://git@git.cg.internal/cs/com.cargarantie.leanix.vica-score-calculator.git
+      </connection>
+      <developerConnection>
+        scm:git:ssh://git@git.cg.internal/cs/com.cargarantie.leanix.vica-score-calculator.git
+      </developerConnection>
+      <url>https://git.cg.internal/projects/cs/repos/com.cargarantie.leanix.vica-score-calculator</url>
+    </scm>
+    -->
+
+    <!-- Car Garantie Distribution Repositories -->
+    <!--
+    <distributionManagement>
+      <repository>
+        <id>com.cargarantie.repo.releases</id>
+        <url>https://repository.cargarantie.com/repository/maven-releases/</url>
+      </repository>
+      <snapshotRepository>
+        <id>com.cargarantie.repo.snapshots</id>
+        <url>https://repository.cargarantie.com/repository/maven-snapshots/</url>
+      </snapshotRepository>
+    </distributionManagement>
+    -->
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <java.version>11</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+
+        <!-- Plugin versions -->
+        <jacoco.version>0.8.6</jacoco.version>
+        <build-tools.version>1.2.2</build-tools.version>
+        <checkstyle.mavenplugin.version>3.1.2</checkstyle.mavenplugin.version>
+        <checkstyle.failsOnError>true</checkstyle.failsOnError>
+        <checkstyle.version>8.41</checkstyle.version>
+        <surefire.version>2.22.2</surefire.version>
+        <failsafe.version>2.22.2</failsafe.version>
+        <spring.boot.maven.version>2.7.10</spring.boot.maven.version>
+
+        <excludeIT></excludeIT>
+
+        <spring-boot.version>2.7.10</spring-boot.version>
+        <lombok.version>1.18.20</lombok.version>
+        <leanix.version>3.9.32</leanix.version>
+
+        <build-number>0</build-number>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Spring Boot Parent dependencies -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-parent</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>net.leanix</groupId>
+                <artifactId>leanix-sdk-java</artifactId>
+                <version>${leanix.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- Test dependencies -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring-boot.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>net.leanix</groupId>
+            <artifactId>leanix-sdk-java</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- Car Garantie Repositories -->
+    <!--
+    <repositories>
+      <repository>
+        <id>com.cargarantie.repo.releases</id>
+        <url>https://repository.cargarantie.com/repository/maven-public/</url>
+      </repository>
+    </repositories>
+    <pluginRepositories>
+      <pluginRepository>
+        <id>com.cargarantie.repo.releases</id>
+        <url>https://repository.cargarantie.com/repository/maven-public/</url>
+      </pluginRepository>
+    </pluginRepositories>
+    -->
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.version}</version>
+                <configuration>
+                    <argLine>-Dfile.encoding=${project.build.sourceEncoding} ${argLine}</argLine>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${failsafe.version}</version>
+                <configuration>
+                    <classesDirectory>${project.build.outputDirectory}</classesDirectory>
+                    <excludedGroups>${excludeIT}</excludedGroups>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <id>default-prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                    <layers>
+                        <enabled>true</enabled>
+                        <configuration>${project.basedir}/layers.xml</configuration>
+                    </layers>
+                    <additionalProperties>
+                        <build-number>${build-number}</build-number>
+                    </additionalProperties>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>build-info</id>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
+                        <configuration>
+                            <additionalProperties>
+                                <build-number>${build-number}</build-number>
+                            </additionalProperties>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${checkstyle.mavenplugin.version}</version>
+                <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                    <suppressionsLocation>checkstyle-smartics-suppressions.xml</suppressionsLocation>
+                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                    <encoding>UTF-8</encoding>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>true</failsOnError>
+                    <failOnViolation>true</failOnViolation>
+                    <linkXRef>false</linkXRef>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <profiles>
+        <profile>
+            <id>static-analysis</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>${checkstyle.mavenplugin.version}</version>
+                        <configuration>
+                            <configLocation>checkstyle.xml</configLocation>
+                            <suppressionsLocation>checkstyle-smartics-suppressions.xml</suppressionsLocation>
+                            <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                            <encoding>UTF-8</encoding>
+                            <consoleOutput>true</consoleOutput>
+                            <failsOnError>${checkstyle.failsOnError}</failsOnError>
+                            <failOnViolation>${checkstyle.failsOnError}</failOnViolation>
+                            <linkXRef>false</linkXRef>
+                        </configuration>
+                        <dependencies>
+                            <!-- CG Code Style -->
+                            <dependency>
+                                <groupId>com.cargarantie.codeanalysis</groupId>
+                                <artifactId>build-tools</artifactId>
+                                <version>${build-tools.version}</version>
+                                <scope>system</scope>
+                                <systemPath>${project.basedir}/lib/build-tools-1.2.2.jar</systemPath>
+                            </dependency>
+                            <dependency>
+                                <groupId>com.puppycrawl.tools</groupId>
+                                <artifactId>checkstyle</artifactId>
+                                <version>${checkstyle.version}</version>
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <id>checkstyle</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>checkstyle</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
