@@ -1,4 +1,4 @@
-# CarGarantie vica-score-calculator Service
+vica-score-calculator Service
 
 Build the Jar file:
 
